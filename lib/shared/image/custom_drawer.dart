@@ -1,3 +1,4 @@
+import 'package:city/pages/cadastro_novo_pet.dart';
 import 'package:flutter/material.dart';
 
 import '../../pages/dados_pet.dart';
@@ -140,6 +141,50 @@ class CustomDrawer extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => const DadosPet(),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          const Divider(),
+          const SizedBox(
+            height: 15,
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CadastroNovoPet(),
+                ),
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              child: Row(
+                children: [
+                  const Icon(Icons.pets),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  GestureDetector(
+                    child: const Text(
+                      'Cadastrar novo Pet',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const CadastroNovoPet(),
                         ),
                       );
                     },
