@@ -59,7 +59,7 @@ class _CadastroNovoPetState extends State<CadastroNovoPet> {
       appBar: AppBar(
         backgroundColor: ligthCoral,
         title: const Text(
-          "Dados do Pet",
+          "Cadastro do novo Pet",
         ),
       ),
       body: Padding(
