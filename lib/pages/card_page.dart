@@ -15,7 +15,7 @@ class _CardPageState extends State<CardPage> {
     return Scaffold(
         body: Container(
       child: ListView(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(10),
         children: [
           Row(
             children: [
@@ -34,10 +34,10 @@ class _CardPageState extends State<CardPage> {
                       color: ligthCoral,
                       borderRadius: BorderRadius.circular(10)),
                   child: const Padding(
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.all(5),
                     child: Text(
                         style: TextStyle(color: whiteColor, fontSize: 14),
-                        'O Border Collie é uma raça de cães conhecida\npor sua inteligência e energia.\nUm Border Collie típico pode viver entre 12 e\n15 anos, sendo que alguns chegam a viver até\nmais tempo,.'),
+                        'O Border Collie é uma raça conhecida\npor sua inteligência e energia.\nUm Border Collie típico pode viver entre 12\n e 15 anos, sendo que alguns chegam a\n viver até mais tempo,.'),
                   ),
                 ),
               ),
@@ -63,9 +63,9 @@ class _CardPageState extends State<CardPage> {
                       color: ligthCoral,
                       borderRadius: BorderRadius.circular(10)),
                   child: const Padding(
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.all(5),
                     child: Text(
-                      'O Salcicha é uma raça de cães conhecida\npor sua inteligência e energia.\nUm Border Collie típico pode viver entre 12 e\n15 anos, sendo que alguns chegam a viver até\nmais tempo.',
+                      'Gatos é uma raça de cães conhecida\npor sua inteligência e energia.\nUm Border Collie típico pode viver entre 12\n e 15 anos, sendo que alguns chegam a\n viver até mais tempo,.',
                       style: TextStyle(color: whiteColor, fontSize: 14),
                     ),
                   ),
@@ -93,10 +93,10 @@ class _CardPageState extends State<CardPage> {
                       color: ligthCoral,
                       borderRadius: BorderRadius.circular(10)),
                   child: const Padding(
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.all(5),
                     child: Text(
                         style: TextStyle(color: whiteColor, fontSize: 14),
-                        'O Gatos é uma raça de cães conhecida\npor sua inteligência e energia.\nUm Border Collie típico pode viver entre 12 e\n15 anos, sendo que alguns chegam a viver até\nmais tempo,.'),
+                        'Os cachorros sao conhecidos por sua\ninteligência e energia.\nUm Border Collie típico pode viver entre 12\n e 15 anos, sendo que alguns chegam a\n viver até mais tempo,.'),
                   ),
                 ),
               )

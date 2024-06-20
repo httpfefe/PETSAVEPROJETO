@@ -21,7 +21,6 @@ class _DadosCadastraisPetState extends State<DadosCadastraisPet> {
   var racaController = TextEditingController(text: "");
   var descricaoController = TextEditingController(text: "");
 
-  DateTime? dataNascimento;
   var tipoRepository = TipoRepository();
   var donorRepository = DonorRepository();
   var tipo = [];
@@ -38,19 +37,6 @@ class _DadosCadastraisPetState extends State<DadosCadastraisPet> {
     opcao = donorRepository.retornaOpcao();
 
     super.initState();
-  }
-
-//essa funcao recebe uma var int e fara um loop simples, pra cada item, adiciona mais um, enquanto for menor ou igual ao valor definido no itens
-  List<DropdownMenuItem<int>> returnItens(int quantidademaxima) {
-    var itens = <DropdownMenuItem<int>>[];
-    for (var i = 0; i <= quantidademaxima; i++) {
-      itens.add(DropdownMenuItem(
-        value: i, //recebe o valor em cada loop
-        child: Text(
-            i.toString()), //retorna esse valor como texto dentr do dropdwon
-      ));
-    }
-    return itens;
   }
 
   @override
@@ -264,21 +250,7 @@ class _DadosCadastraisPetState extends State<DadosCadastraisPet> {
                       } else {
                         print(nomeController.text);
                       }
-                      if (dataNascimento == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            backgroundColor: errorColor,
-                            content: Text(
-                              'data de nascimento invalida',
-                              style: TextStyle(
-                                  fontSize: 20, fontStyle: FontStyle.normal),
-                            ),
-                          ),
-                        );
-                        return;
-                      } else {
-                        print(dataNascimento);
-                      }
+
                       if (tipoSelecionado.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(

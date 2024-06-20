@@ -1,28 +1,60 @@
-import 'package:city/pages/home_page.dart';
-import 'package:city/shared/image/text_label.dart';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import '../shared/image/colors.dart';
+import 'package:http/http.dart' as http;
 
 class DadosPet extends StatefulWidget {
-  const DadosPet({
-    Key? key,
-  }) : super(key: key);
+  const DadosPet({super.key});
 
   @override
   State<DadosPet> createState() => _DadosPetState();
 }
 
 class _DadosPetState extends State<DadosPet> {
-  TextEditingController emailController = TextEditingController();
-  var nomeController = TextEditingController(text: "");
-  var pesoController = TextEditingController(text: "");
-  var racaController = TextEditingController(text: "");
-  var opcaoController = TextEditingController(text: "");
-  bool loading = false;
+  List<dynamic> petsList = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    getAllPets();
+  }
+
+  Future<void> getAllPets() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final url = Uri.parse('http://10.0.2.2:5185/v1/pets');
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        setState(() {
+          petsList = jsonDecode(response.body);
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          isLoading = false;
+          petsList = [];
+        });
+        print('Failed to load pets. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+        petsList = [];
+      });
+      print('Error loading pets: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    var pet; //so para parar o erro
     return Scaffold(
       appBar: AppBar(
         backgroundColor: whiteColor,
@@ -71,205 +103,45 @@ class _DadosPetState extends State<DadosPet> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(30, 10, 20, 10),
+              padding: const EdgeInsets.all(15),
               child: Container(
-                height: 550,
+                height: 360,
                 width: MediaQuery.of(context).size.width,
-                child: Container(
-                  child: ListView(
-                    children: [
-                      const TextLabel(texto: "Nome"),
-                      TextField(
-                        controller: nomeController,
-                        style: const TextStyle(color: darkGreyColor),
-                        decoration: const InputDecoration(
-                          suffixIcon: Icon(Icons.edit),
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: darkGreyColor,
-                            ),
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                            color: ligthCoral,
-                          )),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      const TextLabel(texto: "Peso"),
-                      TextField(
-                        keyboardType: TextInputType.number,
-                        controller: pesoController,
-                        style: const TextStyle(color: darkGreyColor),
-                        decoration: const InputDecoration(
-                          suffixIcon: Icon(Icons.edit),
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: darkGreyColor,
-                            ),
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                            color: ligthCoral,
-                          )),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      const TextLabel(texto: "Especie"),
-                      TextField(
-                        controller: racaController,
-                        style: const TextStyle(color: darkGreyColor),
-                        decoration: const InputDecoration(
-                          suffixIcon: Icon(Icons.edit),
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: darkGreyColor,
-                            ),
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                            color: ligthCoral,
-                          )),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      const TextLabel(
-                          texto:
-                              "Seu animalzinho está apto para realizar uma doaçāo de sangue?"),
-                      TextField(
-                        controller: opcaoController,
-                        style: const TextStyle(color: darkGreyColor),
-                        decoration: const InputDecoration(
-                          suffixIcon: Icon(Icons.edit),
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: darkGreyColor,
-                            ),
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                            color: ligthCoral,
-                          )),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          setState(() {
-                            loading =
-                                false; //sempre que clicar o botao, limpa a var pra ter certeza q ta falso
-                          });
-
-                          if (nomeController.text.isEmpty) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                backgroundColor: errorColor,
-                                content: Text(
-                                  'o nome precisa ser preenchido',
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontStyle: FontStyle.normal),
-                                ),
-                              ),
-                            );
-                            return;
-                          } else {
-                            print(nomeController.text);
-                          }
-
-                          if (pesoController.text.isEmpty) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                backgroundColor: errorColor,
-                                content: Text(
-                                  'insira um peso',
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontStyle: FontStyle.normal),
-                                ),
-                              ),
-                            );
-                            return;
-                          } else {
-                            print(pesoController);
-                          }
-                          if (racaController.text.isEmpty) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                backgroundColor: errorColor,
-                                content: Text(
-                                  'insira a especie',
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontStyle: FontStyle.normal),
-                                ),
-                              ),
-                            );
-                            return;
-                          } else {
-                            print(racaController);
-                          }
-                          if (opcaoController.text.isEmpty) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                backgroundColor: errorColor,
-                                content: Text(
-                                  'insira se ele está apto ou nāo',
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontStyle: FontStyle.normal),
-                                ),
-                              ),
-                            );
-                            return;
-                          } else {
-                            print(opcaoController);
-                          }
-
-                          setState(() {
-                            loading = true;
-                          });
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const HomePage(),
-                              ));
-
-                          Future.delayed(const Duration(seconds: 2), () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('salvo com sucesso'),
-                              ),
-                            );
-
-                            Navigator.pop(context);
-                          });
-                        },
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(ligthCoral),
-                        ),
-                        child: const Text(
-                          "Salvar",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                    ],
-                  ),
+                decoration: BoxDecoration(
+                    color: whiteColor, borderRadius: BorderRadius.circular(20)),
+                child: const Column(
+                  children: [
+                    ListTile(
+                      //pet['name']
+                      //'Age: ${pet['age']}'
+                      title: Text('Nome'),
+                      subtitle: Text('10'),
+                    ),
+                    Divider(
+                      color: midleLightGreyColor,
+                    ),
+                    ListTile(
+                      title: Text('Raça'),
+                      subtitle: Text('Nome'),
+                    ),
+                    Divider(
+                      color: midleLightGreyColor,
+                    ),
+                    ListTile(
+                      title: Text('Peso'),
+                      subtitle: Text('Nome'),
+                    ),
+                    Divider(
+                      color: midleLightGreyColor,
+                    ),
+                    ListTile(
+                      title: Text('Idade'),
+                      subtitle: Text('Nome'),
+                    ),
+                  ],
                 ),
               ),
-            ),
+            )
           ],
         ),
       ),

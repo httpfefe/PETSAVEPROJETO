@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'package:city/shared/image/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class Page3 extends StatefulWidget {
   const Page3({super.key});
@@ -9,60 +11,121 @@ class Page3 extends StatefulWidget {
 }
 
 class _Page3State extends State<Page3> {
+  TextEditingController searchController = TextEditingController();
+  List<dynamic> petsList = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    getAllPets();
+  }
+
+  Future<void> getAllPets() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final url = Uri.parse('http://10.0.2.2:5185/v1/pets');
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        setState(() {
+          petsList = jsonDecode(response.body);
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          isLoading = false;
+          petsList = [];
+        });
+        print('Failed to load pets. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+        petsList = [];
+      });
+      print('Error loading pets: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Container(
             padding:
                 const EdgeInsets.only(top: 35, left: 13, right: 15, bottom: 10),
             decoration: const BoxDecoration(
-                color: searchColor,
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(20),
-                    bottomRight: Radius.circular(20))),
+              color: Colors.grey, // Defina a cor desejada para a barra de busca
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20),
+              ),
+            ),
             child: Container(
               margin: const EdgeInsets.only(top: 5, bottom: 20),
-              width: MediaQuery.of(context).size.width,
               height: 55,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                  color: whiteColor, borderRadius: BorderRadius.circular(20)),
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+              ),
               child: TextFormField(
+                controller: searchController,
+                onChanged: (value) {
+                  // Implementar a lógica de busca conforme necessário
+                },
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: "Pesquise aqui",
                   hintStyle: TextStyle(
-                    color: blackColor.withOpacity(0.5),
+                    color: Colors.black.withOpacity(0.5),
                   ),
                   prefixIcon: const Icon(
                     Icons.search,
-                    color: blackColor,
+                    color: Colors.black,
                   ),
                   suffixIcon: const Icon(
                     Icons.pets,
-                    color: blackColor,
+                    color: Colors.black,
                     size: 16,
                   ),
                 ),
               ),
             ),
           ),
-          const SizedBox(
-            height: 50,
+          const SizedBox(height: 20),
+          Expanded(
+            child: isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : ListView.builder(
+                    itemCount: petsList.length,
+                    itemBuilder: (context, index) {
+                      final pet = petsList[index];
+                      return ListTile(
+                        title: Container(
+                          decoration: BoxDecoration(
+                              color: ligthCoral,
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Text(pet['name']),
+                          ),
+                        ),
+                        subtitle: Text('Age: ${pet['age']}'),
+                        // Personalize conforme as informações do pet disponíveis
+                      );
+                    },
+                  ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              children: [
-                Image.asset(
-                  'assets/images/LUPA_TCC.png',
-                  width: 500,
-                ),
-              ],
-            ),
-          ),
+          const Divider(
+            color: midleDarkGreyColor,
+          )
         ],
       ),
     );

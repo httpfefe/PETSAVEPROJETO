@@ -237,30 +237,7 @@ class CustomDrawer extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(
-            height: 15,
-          ),
-          const Divider(),
-          const SizedBox(
-            height: 15,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            child: Row(
-              children: [
-                const Icon(Icons.settings),
-                const SizedBox(
-                  width: 5,
-                ),
-                GestureDetector(
-                    onTap: () {},
-                    child: const Text(
-                      'Configuracoes',
-                      style: TextStyle(fontSize: 16),
-                    )),
-              ],
-            ),
-          ),
+
           const SizedBox(
             height: 15,
           ),
